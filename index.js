@@ -1,10 +1,13 @@
 const express = require('express')
 const app = express()
 const parkings = require('./parkings.json')
+const reservations = require('./reservations.json')
 
 // Middleware
 app.use(express.json())
 
+
+//PARKING
 app.get('/parkings', (req,res) => {
     res.status(200).json(parkings)
 })
@@ -34,6 +37,18 @@ app.delete('/parkings/:id', (req,res) => {
     let parking = parkings.find(parking => parking.id === id)
     parkings.splice(parkings.indexOf(parking),1)
     res.status(200).json(parkings)
+})
+
+//RESERVATION
+app.get('/parkings/:id/reservations', (req,res) => {
+    const id = parseInt(req.params.id)
+    const reservation = reservations.filter(reservation => reservation.parkingId === id)
+    res.status(200).json(reservation)
+})
+
+app.post('/parkings/:id/reservations', (req,res) => {
+    reservations.push(req.body)
+    res.status(200).json(reservations)
 })
 
 app.listen(8080, () => {
